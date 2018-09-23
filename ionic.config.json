@@ -1,0 +1,7 @@
+{
+  "name": "help-orphen",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}
