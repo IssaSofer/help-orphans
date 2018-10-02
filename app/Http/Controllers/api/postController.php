@@ -133,8 +133,6 @@ class postController extends Base
 
         $post->save();
 
-        return redirect('home');
-
     } 
 
 
