@@ -13,46 +13,37 @@ use Gate;
 use Auth;
 class chatController extends Base
 {
-    public function getMessage($id, $post )
+    public function getMessage($id, $donate, $post)
     {
-		if ($id > 0 and $post > 0){
-			
-	    	$user = User::all('id');
+        if ($id > 0 and $donate > 0 and $post > 0 ){
 
-	    	$post_id = Posts::all()->where('id', '=', $post, 'kind_id', '=', $user);
+            if ($id == auth()->user()->id or $donate == auth()->user()->id ){
 
-	    	
-	    	foreach ($post_id as $p) {
+                $message = Chat::orderBy('created_at', 'desc')->get()->where( 'user_1', '=', $donate, 'user_2', '=', $id, 'post_id', '=', $post);
+               
+                return $this->sendResponse($message, 'get message sucssfuly');   
+            }else{
+                return $this->sendResponse('', 'get message sucssfuly');
+            }
 
-	    		$message = Chat::orderBy('created_at', 'desc')->get()->where( 'user_1', '=', auth()->user()->id, 'user_2', '=', $id, 'post_id', '=', $p->id);
-
-	    		return $this->sendResponse($message, 'get message sucssfuly');
-	    	}
-
-
-		}else{
-			return $this->sendResponse('', 'Sorry');
-		}
-    	
+        }else{
+            return $this->sendResponse('', 'Sorry');
+        }
+        
     }
-
-    public function sendMessage(Request $request, $id, $crop, $post)
+    public function sendMessage(Request $request, $id, $donate, $post)
     {
-
         $input = $request->all();
-        $input['user_1'] = $crop;
+        $input['user_1'] = $donate;
         $input['user_2'] = $id;
         $input['post_id'] = $post;
         $val = Validator::make($input,[
             'message' => 'required'
             ]);
-
         if($val -> fails()){
             return $this->sendError('error validation', $val->errors());
         }
-
         $massege = Chat::create($input);
         return $this->sendResponse($massege,'Message Create Succesfully');
-
     }
 }

@@ -31,6 +31,8 @@ class homeController extends Base
         }
 
         if (Gate::denies('kind', Auth::user())) {
+
+
             $user = User::all('region', 'id')->where('id', auth()->user()->id);
 
             foreach ($user as $u) {
@@ -43,20 +45,24 @@ class homeController extends Base
 
                         // get all post for user login 
 
-                        $post_user = Posts::orderBy('created_at')->get()->where('kind_id','=', $c->id, 'status','=', '1'); 
+                        $post_user = Posts::orderBy('created_at')->get()->where('kind_id','=', $c->id, 'status','=', '1');
 
-                         $array = [$post_user,$c->name];
-                    
-                        return $this->sendResponse($array, ' gggggg'); 
+                        $array = [$post_user,$c->name];
+                        return $this->sendResponse($array, ' gggggg');
+
+                        //$users = User::get();
+                        foreach (unreadnotifications as $not) {
+                            return $this->sendResponse($not, ' gggggg');
+                        }
                     }
 
                 }else{
                     return $this->sendResponse('', ' gggggg'); 
                 }
             }
-
-
         }
+
+
 	}
 
     // Not login any user. This page for start app 

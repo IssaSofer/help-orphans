@@ -19,7 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post("register", "RegisterController@register");
 Route::post("login", "LoginController@login");
-Route::get("welcome", "api\homeController@welcome");
+Route::get("/", "api\homeController@welcome");
 
 
 Route::middleware('auth:api')->group(function() {
@@ -27,12 +27,11 @@ Route::middleware('auth:api')->group(function() {
     Route::put("change/{id}", "api\postController@change");
     Route::resource("profile", "api\profileController");
     Route::post("logout", "api\profileController@logout");
-    Route::get("post/{id}/donate", "api\donatorController@index");
-    Route::post("post/{id}/donate", "api\donatorController@story");
     Route::get("search", "api\searchController@list");
     Route::get("search/crop/{id}", "api\searchController@showcrop");
-    Route::get("/", "api\homeController@index");
+    Route::get("home", "api\homeController@index");
     Route::get("savepost", "api\savepostController@index");
-    Route::get("user/{id}/{crop}/message/{post}", "api\chatController@getMessage");
-    Route::post("user/{id}/{crop}/message/{post}", "api\chatController@sendMessage");
+    Route::get("user/{id}/{donate}/message/{post}", "api\chatController@getMessage");
+    Route::post("user/{id}/{donate}/message/{post}", "api\chatController@sendMessage");
+    Route::resource("donate", "api\donateController");
 });

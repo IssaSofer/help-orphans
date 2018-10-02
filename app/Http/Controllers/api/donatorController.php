@@ -4,7 +4,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller as Controller;
 use App\Http\Controllers\api\BaseController as Base;
 use Illuminate\Http\Request;
-use App\Posts;
+use App\Donator;
 use App\User;
 use App\Donator;
 use Validator;
@@ -15,24 +15,57 @@ use Auth;
 
 class donatorController extends Base
 {
-    public function index($id)
-    {
-    	$post = Posts::all('id')->where('id', $id);
-    	$user = User::all("id")->where('id', Auth()->user()->id);
-    	$ms = "post id = " . $post . " And user id = " . $user;
-    	$array = array($post, $user);
-    	return $this->sendResponse($array, $ms);
 
+    public function __construct()
+    {
+        if (Gate::denies('kind', Auth::user())){
+             $this->middleware('auth:api', ['except'=>['index']]);
+        }
+    }
+    // show donate for crop
+    public function index()
+    {
+        $user = User::all('id');
+
+        $donate = Donator::all()->where('user_id', $user->id);
+
+        return $this->sendResponse($donate->toArray(),'Post read Succesfully');
     }
 
+    //insert data in database
     public function story($id, Request $request)
     {
+        $input = $request->all();
+        $val = Validator::make($input,[
+            'asia'        => 'required|integer',
+            'zain'        => 'required|integer',
+            'card'        => 'required|integer'
+            ]);
 
-    	$post_id = Posts::find($id);
-    	$input_id = $request->all();
-    	$input_id['post_id'] = $post_id->id;
-    	$input_id['user_id'] = Auth()->user()->id;
-    	$donate = Donator::create($input_id);
-    	return $this->sendResponse($donate->toArray(), "Donator save");
+        if($val -> fails()){
+            return $this->sendError('error validation', $val ->errors());
+        }
+
+        $donate = Donator::create($input);
+        return $this->sendResponse($donate->toArray(),'Donate Create Succesfully');
     }
+
+    // update post whene edit post
+    public function update(Request $request, Donator $donate) {
+        $input = $request->all();
+        $val = Validator::make($input,[
+            'asia'        => 'required|integer',
+            'zain'        => 'required|integer',
+            'card'        => 'required|integer'
+            ]);
+
+        if($val -> fails()){
+            return $this->sendError('error validation', $val ->errors());
+        }
+
+        $donate->save();
+        return $this->sendResponse($donate->toArray(),'Donate Update Succesfully');
+
+    } 
+
 }

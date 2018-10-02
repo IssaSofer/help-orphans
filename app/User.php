@@ -20,9 +20,7 @@ class User extends Authenticatable
 
         'password', 'kind',
 
-        'region', 'asia', 
-        
-        'zain', 'crad',
+        'region'
     ];
 
     /**
@@ -53,5 +51,10 @@ class User extends Authenticatable
     public function chat2()
     {
         return $this->hasMany('App\Chat', 'user_2');
+    }
+
+    public function donate()
+    {
+        return $this->hasOne('App\donate', 'user_id');
     }
 }

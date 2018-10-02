@@ -23,10 +23,6 @@ class Registercontroller extends Base
     		'password'    => 'required',
             'kind'        => 'required|integer',
             'region'      => 'required',
-            'asia'        => 'required|integer',
-            'zain'        => 'required|integer',
-            'card'        => 'required|integer'
-
     		]);
 
     	if($validator->fails()){

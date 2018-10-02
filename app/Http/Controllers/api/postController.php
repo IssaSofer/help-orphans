@@ -17,7 +17,7 @@ class postController extends Base
     public function __construct()
     {
         if (Gate::denies('kind', Auth::user())){
-             $this->middleware('auth', ['except'=>['index','show']]);
+             $this->middleware('auth:api', ['except'=>['index','show']]);
         }
     }
 
@@ -67,6 +67,9 @@ class postController extends Base
             }
 
             $post = Posts::create($input);
+
+            auth()->user()->notify(new \App\Notifications\PostNewNotification($post));
+
             return $this->sendResponse($post->toArray(),'Post Create Succesfully');
         }
 
@@ -117,14 +120,14 @@ class postController extends Base
 
         $post = Posts::find($id);
 
-        if($post->status == 1){
+        if($post->status !== 1){
 
-            $post->status = 0;
+            $post->status = 1;
         }
 
         else{
 
-            $post->status = 1;
+            $post->status = 0;
         }
         
 

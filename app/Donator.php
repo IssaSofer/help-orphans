@@ -8,18 +8,13 @@ class Donator extends Model
 {
     //
     protected $fillable = [
-        'user_id', 'post_id', 
+        'user_id', 'asia', 
+        
+        'zain', 'crad', 
     ];
 
-
-    public function post()
-    {
-    	return $this->belongTo('App\Posts', 'id');
-    }
-
-
-   /* public function users()
+    public function users()
     {
     	return $this->belongTo('App\User', 'id');
-    } */
+    } 
 }
